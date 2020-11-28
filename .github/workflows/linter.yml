@@ -29,7 +29,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |
-        files = ${{ steps.modified_files.outputs.files }}
+        files = (${{ steps.modified_files.outputs.files }})
         function join { local IFS="$1"; shift; echo "$*"; }
         filename = join , ${files[@]}
         flake8 --filename=$filename --max-complexity=10 --max-line-length=127 --statistics
