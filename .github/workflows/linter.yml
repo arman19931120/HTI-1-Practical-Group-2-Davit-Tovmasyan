@@ -17,7 +17,7 @@ jobs:
     - name: Get created/modified files
       id: modified_files
       run: |
-        echo "::set-output name=files::$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep '\.py$' | xargs)"
+        echo "::set-output name=files::$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep '\.py$' | paste -sd "," - )"
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -29,7 +29,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |
-        files = (${{ steps.modified_files.outputs.files }})
-        function join { local IFS="$1"; shift; echo "$*"; }
-        filename = join , ${files[@]}
-        flake8 --filename=$filename --max-complexity=10 --max-line-length=127 --statistics
+        filenames=${{ steps.modified_files.outputs.files }}
+        if [ -z '$filenames' ]
+        then
+          flake8 --filename=$filenames --max-complexity=10 --max-line-length=127 --statistics
