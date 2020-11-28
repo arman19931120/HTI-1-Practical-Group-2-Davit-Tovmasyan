@@ -17,7 +17,7 @@ jobs:
     - name: Get created/modified files
       id: modified_files
       run: |
-        echo "::set-output name=files::$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep '\.py$' | paste -sd "," - )"
+        echo "::set-output name=files::$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep '\.py$' | sed 's/.*/\*\/&/' | paste -sd "," - )"
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
