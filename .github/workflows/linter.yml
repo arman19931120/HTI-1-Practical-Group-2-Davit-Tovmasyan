@@ -28,12 +28,8 @@ jobs:
         pip install flake8
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
-    - name: echo the changed files
-        run: |
-          files = ${{ steps.modified_files.outputs.files }}
-          function join { local IFS="$1"; shift; echo "$*"; }
-          filename = join , ${files[@]}
-          flake8 --filename=$filename --max-complexity=10 --max-line-length=127 --statistics
       run: |
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --max-complexity=10 --max-line-length=127 --statistics
+        files = ${{ steps.modified_files.outputs.files }}
+        function join { local IFS="$1"; shift; echo "$*"; }
+        filename = join , ${files[@]}
+        flake8 --filename=$filename --max-complexity=10 --max-line-length=127 --statistics
